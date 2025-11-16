@@ -6,9 +6,7 @@ import { User } from "../models/index.js";
 
 dotenv.config();
 
-// =====================================
-// Utility: Generate JWT Token
-// =====================================
+// Utility to generate JWT
 const generateToken = (user) => {
   return jwt.sign(
     {
@@ -22,9 +20,7 @@ const generateToken = (user) => {
   );
 };
 
-// =====================================
-// REGISTER USER
-// =====================================
+// register user
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password, department, tech_stack, role } = req.body;
@@ -74,9 +70,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// =====================================
-// LOGIN USER
-// =====================================
+// login user
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -114,9 +108,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// =====================================
-// GET ALL USERS (with reporting manager name)
-// =====================================
+// GET ALL EMPLOYEES
 export const getAllEmployees = async (req, res) => {
   try {
     const users = await User.findAll({
@@ -130,7 +122,7 @@ export const getAllEmployees = async (req, res) => {
         "reporting_manager_id",
         "createdAt",
 
-        // ⭐ Fetch reporting manager name using self join
+        // Fetch reporting manager name using self join
         [Sequelize.col("manager.name"), "reporting_manager"],
       ],
 
@@ -156,9 +148,7 @@ export const getAllEmployees = async (req, res) => {
   }
 };
 
-// =====================================
-// ASSIGN REPORTING MANAGER (ADMIN ONLY)
-// =====================================
+// ASSIGN REPORTING MANAGER
 export const assignReportingManager = async (req, res) => {
   try {
     const adminUser = req.user; // From middleware
@@ -230,19 +220,19 @@ export const deleteUser = async (req, res) => {
     const userIdToDelete = req.params.id;
     const loggedInUser = req.user; // { user_id, role, email, ... }
 
-    // 1️⃣ Check if logged-in user is admin
+    //  Check if logged-in user is admin
     if (loggedInUser.role !== "admin") {
       return res.status(403).json({ message: "Only admins can delete users" });
     }
 
-    // 2️⃣ Prevent admin from deleting themselves (optional but smart)
+    // Prevent admin from deleting themselves (optional but smart)
     if (parseInt(userIdToDelete) === loggedInUser.user_id) {
       return res.status(400).json({
         message: "Admin cannot delete their own account",
       });
     }
 
-    // 3️⃣ Find the user
+    //  Find the user
     const user = await User.findByPk(userIdToDelete);
 
     if (!user) {
@@ -251,7 +241,7 @@ export const deleteUser = async (req, res) => {
       });
     }
 
-    // 4️⃣ Delete user
+    //  Delete user
     await user.destroy();
 
     res.status(200).json({

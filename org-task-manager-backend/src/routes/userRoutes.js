@@ -14,33 +14,31 @@ import adminMiddleware from "../middlewares/adminMiddleware.js";
 
 const router = express.Router();
 
-// ===============================
-// PUBLIC ROUTES
-// ===============================
+//user register route
 router.post("/register", registerUser);
+
+//user login route
 router.post("/login", loginUser);
 
-// ===============================
-// PROTECTED ROUTES (Logged-in users only)
-// ===============================
+//get all employees route
 router.get("/employees", authMiddleware, getAllEmployees);
 
-// ===============================
-// ADMIN ONLY ROUTES
-// ===============================
+// assign reporting manager to an employee
 router.put(
   "/assign-manager",
   authMiddleware,
-  adminMiddleware,     // ⭐ ensures only admins can call this
+  adminMiddleware,     
   assignReportingManager
 );
 
+// update tech stack for logged-in user
 router.put("/update-techstack", authMiddleware, updateTechStack);
 
+// delete user (admin only)
 router.delete(
   "/:id",
   authMiddleware,
-  adminMiddleware,     // ⭐ ensures only admins can call this
+  adminMiddleware,    
   deleteUser
 );
 

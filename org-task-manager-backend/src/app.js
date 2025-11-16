@@ -16,17 +16,17 @@ app.use("/api/users", userRoutes);
 
 // Health check route
 app.get("/", (req, res) => {
-  res.send("🚀 Task Management API running successfully!");
+  res.send("Task Management API running successfully!");
 });
 
 // Sync DB and start server
 sequelize
   .sync({ alter: true }) // use { force: true } for full DB reset in dev
   .then(() => {
-    console.log("✅ Database synced successfully!");
+    console.log("Database synced successfully!");
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () =>
-      console.log(`🌐 Server running on port ${PORT}`)
+      console.log(` Server running on port ${PORT}`)
     );
   })
-  .catch((err) => console.error("❌ Database connection failed:", err));
+  .catch((err) => console.error(" Database connection failed:", err));

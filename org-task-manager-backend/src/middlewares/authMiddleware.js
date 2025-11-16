@@ -7,20 +7,20 @@ const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    // 1️⃣ Check Authorization header exists
+    //  Check Authorization header exists
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         message: "Authorization token missing or malformed",
       });
     }
 
-    // 2️⃣ Extract token
+    //  Extract token
     const token = authHeader.split(" ")[1];
 
-    // 3️⃣ Verify token
+    //  Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 4️⃣ Save user info to request object
+    //  Save user info to request object
     req.user = decoded; 
     // decoded contains: { id, name, email, role, iat, exp }
 
